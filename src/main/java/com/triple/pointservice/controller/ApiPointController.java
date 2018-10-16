@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/points")
 public class ApiPointController {
@@ -14,7 +16,7 @@ public class ApiPointController {
     private PointService pointService;
 
     @PostMapping("")
-    public ResponseEntity<Void> storePointHistory(@RequestBody EventDTO eventDTO) {
+    public ResponseEntity<Void> storePointHistory(@RequestBody @Valid EventDTO eventDTO) {
         pointService.storePointHistory(eventDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
