@@ -1,9 +1,14 @@
 package com.triple.pointservice.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Review {
     @Id
     private String id;

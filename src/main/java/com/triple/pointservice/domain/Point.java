@@ -1,11 +1,14 @@
 package com.triple.pointservice.domain;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
+@NoArgsConstructor
 public class Point {
     @Id
     private String id;
@@ -18,4 +21,12 @@ public class Point {
     private String relatedId;
     private String action;
 
+    public Point(User user, String content, int point, String pointType, String relatedId, String action) {
+        this.user = user;
+        this.content = content;
+        this.point = point;
+        this.pointType = pointType;
+        this.relatedId = relatedId;
+        this.action = action;
+    }
 }
