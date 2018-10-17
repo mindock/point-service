@@ -2,7 +2,6 @@ package com.triple.pointservice.service;
 
 import com.triple.pointservice.domain.Place;
 import com.triple.pointservice.domain.Point;
-import com.triple.pointservice.domain.Review;
 import com.triple.pointservice.domain.User;
 import com.triple.pointservice.dto.EventDTO;
 import com.triple.pointservice.repository.PlaceRepository;
@@ -64,18 +63,22 @@ public class PointService {
         addBonusPoint(eventDTO, user);
         //사진 첨부하지 않은 경우, 포인트 1점
         IF eventDTO.getAttachedPhotoIds().size() == 0 {
-            pointRepository.save(new Point(user, "리뷰 작성", 1, eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()))
+            pointRepository.save(new Point(user, "리뷰 작성", 1,
+                    eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()))
             return;
         }
         //사진 첨부한 경우, 포인트 2점
-        pointRepository.save(new Point(user, "리뷰 작성", 2, eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()))
-        return;
+        pointRepository.save(new Point(user, "리뷰 작성", 2,
+                eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()))
     }
 
     private void addBonusPoint(EventDTO eventDTO, User user, Place place) {
+        IF reviewRepository.existsByPlaceIdEqualsAndDeletedFalse(eventDTO.getPlaceId()) is true {
+            return;
+        }
         //사용자 입장에서 본 첫 리뷰인 경우, 보너스 점수 1점
-        IF reviewRepository.existsByPlaceIdEqualsAndDeletedFalse(eventDTO.getPlaceId()) is true
-            pointRepository.save(new Point(user,"첫 리뷰", 1, "BONUS", eventDTO.getReviewId(), eventDTO.getAction()))
+        pointRepository.save(new Point(user,"첫 리뷰", 1,
+                "BONUS", eventDTO.getReviewId(), eventDTO.getAction()))
     }
 
     private void modifyReviewPoint(EventDTO eventDTO, User user) {
@@ -94,23 +97,20 @@ public class PointService {
             return;
         }
         //사진을 모두 지운 경우, 포인트 -1점
-        pointRepository.save(new Point(user, "리뷰 수정", -1, eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()))
+        pointRepository.save(new Point(user, "리뷰 수정", -1,
+                eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()))
     }
 
     private void deleteReviewPoint(EventDTO eventDTO, User user) {
         //(현재까지 해당 리뷰를 통해 얻은 포인트) * -1 저장 = 해당 리뷰 포인트 = 0
         pointRepository.save(new Point(user, "리뷰 삭제", getReviewPoint(eventDTO.getReviewId()) * -1,
-                eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()));
+                eventDTO.getType(), eventDTO.getReviewId(), eventDTO.getAction()))
     }
 
-    public int getReviewPoint(String reviewId) {
+    private int getReviewPoint(String reviewId) {
         //Type이 review이며 reviewId가 같은 pointHistory 리스트를 받아 해당 리뷰 포인트를 구한다
         pointHistoryList = pointRepository.findByPointTypeEqualsAndRelatedIdEquals("REVIEW", reviewId)
-        totalPoint = 0
-        FOR index = 0 to pointHistoryList.size() - 1
-           totalPoint = totalPoint + pointHistoryList.get(index)
-
-        return totalPoint
+        return getPointSum(pointHistoryList);
     }
 
     public int getPersonalPoint(String userId) {
