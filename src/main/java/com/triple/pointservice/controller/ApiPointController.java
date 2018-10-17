@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -14,6 +15,12 @@ import javax.validation.Valid;
 public class ApiPointController {
     @Autowired
     private PointService pointService;
+
+    @GetMapping("")
+    public ResponseEntity<Integer> getPersonalPoint(HttpSession session) {
+        //현재 세션에 저장된 아이디를 이용해 회원 포인트 조회
+        return new ResponseEntity<>(pointService.getPersonalPoint(session.getAttribute("LOGIN_USER").getId()), HttpStatus.OK);
+    }
 
     @PostMapping("")
     public ResponseEntity<Void> storePointHistory(@RequestBody @Valid EventDTO eventDTO) {

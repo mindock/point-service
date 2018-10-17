@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class PointService {
@@ -108,6 +109,26 @@ public class PointService {
         totalPoint = 0
         FOR index = 0 to pointHistoryList.size() - 1
            totalPoint = totalPoint + pointHistoryList.get(index)
+
+        return totalPoint
+    }
+
+    public int getPersonalPoint(String userId) {
+        //유저가 없는 경우, UserNotFoundException 발생
+        IF userRepository.existsById(eventDTO.getUserId()) is false
+            throw new UserNotFoundException()
+        ELSE
+            user = userRepository.findById(eventDTO.getUserId())
+
+        //해당 유저의 point 기록을 이용해 포인트를 구함
+        pointHistoryList = pointRepository.findByUserId(userId)
+        return getPointSum(pointHistoryList)
+    }
+
+    private int getPointSum(List<Point> pointList) {
+        totalPoint = 0
+        FOR index = 0 to pointList.size() - 1
+            totalPoint = totalPoint + pointList.get(index).getPoint()
 
         return totalPoint
     }
