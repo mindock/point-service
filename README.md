@@ -49,9 +49,9 @@
 ```
 create table USER (
     ID char(36),
-    NAME varchar(255) not null,
-    EMAIL varchar(100),
-    PASSWORD varchar(100) not null,
+    NAME varchar(50) not null,
+    EMAIL varchar(50),
+    PASSWORD varchar(50) not null,
     POINT int default 0,
     constraint USER_PK primary key (ID)
 );
@@ -66,7 +66,7 @@ create table REVIEW (
     ID char(36),
     USER_ID char(36) not null,
     PLACE_ID char(36) not null,
-    CONTENT varchar(1000) not null,
+    CONTENT varchar(255) not null,
     DELETED BOOLEAN default false,
     constraint REVIEW_PK primary key (ID),
     constraint REVIEW_FK_USER foreign key (USER_ID) references USER(ID),
@@ -89,11 +89,11 @@ create index REVIEW_PHOTO_INDEX_REVIEW on REVIEW_PHOTO(REVIEW_ID);
 create table POINT (
     ID char(36),
     USER_ID char(36) not null,
-    CONTENT varchar(255) not null,
+    CONTENT varchar(25) not null,
     POINT int,
-    TYPE varchar(50),
+    TYPE varchar(10),
     RELATED_ID char(36),
-    ACTION varchar(50),
+    ACTION varchar(10),
     constraint POINT_PK primary key (ID),
     constraint POINT_FK foreign key (USER_ID) references USER(ID)
 );
