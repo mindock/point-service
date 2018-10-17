@@ -1,5 +1,6 @@
 package com.triple.pointservice.domain;
 
+import com.triple.pointservice.dto.PointDTO;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -31,5 +32,9 @@ public class Point {
         this.type = type;
         this.relatedId = relatedId;
         this.action = action;
+    }
+
+    public PointDTO toDTO() {
+        return new PointDTO(id, content, point, type, relatedId, action);
     }
 }

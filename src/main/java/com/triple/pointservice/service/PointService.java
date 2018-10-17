@@ -4,6 +4,7 @@ import com.triple.pointservice.domain.Place;
 import com.triple.pointservice.domain.Point;
 import com.triple.pointservice.domain.User;
 import com.triple.pointservice.dto.EventDTO;
+import com.triple.pointservice.dto.PointDTO;
 import com.triple.pointservice.repository.PlaceRepository;
 import com.triple.pointservice.repository.PointRepository;
 import com.triple.pointservice.repository.ReviewRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PointService {
@@ -110,18 +112,18 @@ public class PointService {
         return getPointSum(pointRepository.findByTypeEqualsAndRelatedIdEquals("REVIEW", reviewId));
     }
 
-    public int getPersonalPoint(String userId) {
-        //유저가 없는 경우, UserNotFoundException 발생
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException.class);
-
-        //해당 유저의 point 기록을 이용해 포인트를 구함
-        return getPointSum(pointRepository.findByUserId(userId));
-    }
-
     private int getPointSum(List<Point> pointList) {
         int totalPoint = 0;
         for(Point point : pointList)
-            totalPoint += point.getPoint();
+            totalPoint += point.toDTO().getPoint();
         return totalPoint;
+    }
+
+    public List<PointDTO> getPersonalPointHistory(String userId) {
+        //유저가 없는 경우, UserNotFoundException 발생
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException.class);
+
+        //해당 유저의 point 기록을 DTO로 변환해 return
+        return pointRepository.findByUserId(userId).stream().map(point -> point.toDTO()).collect(Collectors.toList());
     }
 }
