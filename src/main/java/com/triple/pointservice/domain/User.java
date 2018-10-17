@@ -11,4 +11,11 @@ public class User {
     private String name;
     private String email;
     private String password;
+
+    private int point;
+
+    public User addPoint(int point) {
+        this.point += point;
+        return this;
+    }
 }
