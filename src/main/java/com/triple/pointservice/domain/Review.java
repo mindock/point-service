@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(
+indexes = {@Index(name = "REVIEW_INDEX_USER", columnList = "user_id"),
+    @Index(name = "REVIEW_INDEX_PLACE", columnList = "place_id")})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review {

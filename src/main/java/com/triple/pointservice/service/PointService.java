@@ -84,7 +84,7 @@ public class PointService {
     private void modifyReviewPoint(EventDTO eventDTO, User user) {
         reviewPoint = getReviewPoint(eventDTO.getReviewId());
         //보너스 점수 받은 경우를 제외한 해당 리뷰 포인트 계산
-        IF pointRepository.existsByPointTypeEqualsAndRelatedIdEquals("BONUS", eventDTO.getReviewId()) is true
+        IF pointRepository.existsByTypeEqualsAndRelatedIdEquals("BONUS", eventDTO.getReviewId()) is true
             reviewPoint = reviewPoint - 1
 
         //포인트 변동이 없는 경우,
@@ -109,7 +109,7 @@ public class PointService {
 
     private int getReviewPoint(String reviewId) {
         //Type이 review이며 reviewId가 같은 pointHistory 리스트를 받아 해당 리뷰 포인트를 구한다
-        pointHistoryList = pointRepository.findByPointTypeEqualsAndRelatedIdEquals("REVIEW", reviewId)
+        pointHistoryList = pointRepository.findByTypeEqualsAndRelatedIdEquals("REVIEW", reviewId)
         return getPointSum(pointHistoryList);
     }
 

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PointRepository extends JpaRepository<Point, String> {
-    boolean existsByPointTypeEqualsAndRelatedIdEquals(String pointType, String relatedId);
-    List<Point> findByPointTypeEqualsAndRelatedIdEquals(String pointType, String relatedId);
+    boolean existsByTypeEqualsAndRelatedIdEquals(String type, String relatedId);
+    List<Point> findByTypeEqualsAndRelatedIdEquals(String type, String relatedId);
 }
